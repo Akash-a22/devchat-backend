@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: room
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: devchat
+
+server:
+  port: 8000
