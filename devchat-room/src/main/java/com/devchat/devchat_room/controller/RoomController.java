@@ -14,22 +14,22 @@ public class RoomController {
     private RoomService roomService;
 
     @PostMapping
-    public ResponseDTO createRoom(@RequestBody Room room){
+    public ResponseDTO createRoom(@RequestBody Room room) {
         return roomService.createRoom(room);
     }
 
     @PostMapping("/update")
-    public ResponseDTO updateRoom(@RequestBody Room room){
+    public ResponseDTO updateRoom(@RequestBody Room room) {
         return roomService.updateRoom(room);
     }
 
     @PostMapping("/join")
-    public ResponseDTO joinRoom(@RequestBody Room room){
+    public ResponseDTO joinRoom(@RequestBody Room room) {
         return roomService.joinRoom(room);
     }
 
     @DeleteMapping("/{key}")
-    public ResponseDTO deleteRoom(@PathVariable String key){
+    public ResponseDTO deleteRoom(@PathVariable String key) {
         return roomService.deleteRoom(key);
     }
 }
