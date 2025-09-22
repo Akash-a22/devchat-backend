@@ -9,15 +9,12 @@ import java.util.List;
 
 @Data
 @Document(collection = "room")
-public class Room {
+public class Room extends BaseEntity{
     @Id
     private String id;
+    private String roomId;
     private String key;
     private String name;
-    private String createdBy;
-    private String modifiedBy;
-    private Date createdOn;
-    private Date modifiedOn;
-    private long personCount;
+    private long size;
     private List<User> users;
 }

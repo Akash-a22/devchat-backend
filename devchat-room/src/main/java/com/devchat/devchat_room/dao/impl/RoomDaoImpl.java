@@ -11,7 +11,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.UpdateDefinition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class RoomDaoImpl implements RoomDao {
 
     @Autowired
@@ -36,7 +38,7 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public UpdateResult updateRoom(Room roomDB) {
-        Query query=Query.query(Criteria.where("id").is(roomDB.getId()));
+        Query query=Query.query(Criteria.where("roomId").is(roomDB.getRoomId()));
         UpdateDefinition update = commonUtil.buildUpdateFromNonNullFields(roomDB);
         return mongoTemplate.updateFirst(query,update,Room.class,DBCollection.room.name());
     }

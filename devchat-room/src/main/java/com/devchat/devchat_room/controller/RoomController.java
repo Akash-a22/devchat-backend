@@ -13,17 +13,17 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseDTO createRoom(@RequestBody Room room){
         return roomService.createRoom(room);
     }
 
-    @PostMapping("/")
+    @PostMapping("/update")
     public ResponseDTO updateRoom(@RequestBody Room room){
         return roomService.updateRoom(room);
     }
 
-    @PutMapping("/")
+    @PostMapping("/join")
     public ResponseDTO joinRoom(@RequestBody Room room){
         return roomService.joinRoom(room);
     }

@@ -11,6 +11,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @Slf4j
 public class UserDaoImpl implements UserDao {
@@ -19,6 +21,26 @@ public class UserDaoImpl implements UserDao {
     private MongoTemplate mongoTemplate;
     @Override
     public DeleteResult deleteUserById(String id) {
-        return mongoTemplate.remove(Query.query(Criteria.where(id).is(id)), User.class, DBCollection.user.name());
+        return mongoTemplate.remove(Query.query(Criteria.where("userId").is(id)), User.class, DBCollection.user.name());
+    }
+
+    @Override
+    public void saveUser(User user) {
+        mongoTemplate.save(user);
+    }
+
+    @Override
+    public User checkIfUserExistWithKey(String name) {
+        return mongoTemplate.findOne(Query.query(Criteria.where("name").is(name)), User.class , DBCollection.user.name());
+    }
+
+    @Override
+    public User getUserById(String id) {
+        return mongoTemplate.findOne(Query.query(Criteria.where("userId").is(id)), User.class , DBCollection.user.name());
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        return mongoTemplate.findAll(User.class);
     }
 }

@@ -5,11 +5,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "user")
-public class User extends  BaseEntity {
+@Document(collection = "increment")
+public class Increment {
     @Id
     private String id;
-    private String name;
-    private String key;
-    private String userId;
+    private String type;
+    private long value;
 }
