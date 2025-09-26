@@ -14,14 +14,14 @@ public class BaseEntity {
 
 
     public void updateEntity(String name){
-        this.setModifiedBy(name);
-        this.setModifiedOn(new Date());
+//        this.setModifiedBy(name);
+//        this.setModifiedOn(new Date());
     }
 
     public void createEntity(String name){
-        this.setCreatedBy(name);
-        this.setCreatedOn(new Date());
-        this.setModifiedBy(name);
-        this.setModifiedOn(new Date());
+//        this.setCreatedBy(name);
+//        this.setCreatedOn(new Date());
+//        this.setModifiedBy(name);
+//        this.setModifiedOn(new Date());
     }
 }
