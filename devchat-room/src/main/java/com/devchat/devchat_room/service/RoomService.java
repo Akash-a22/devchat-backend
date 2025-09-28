@@ -14,4 +14,6 @@ public interface RoomService {
     ResponseDTO updateRoom(Room room);
 
     ResponseDTO joinRoom(Room room);
+
+    ResponseDTO getRoom(String roomId);
 }

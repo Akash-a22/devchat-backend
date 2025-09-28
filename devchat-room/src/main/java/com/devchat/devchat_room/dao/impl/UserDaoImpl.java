@@ -2,6 +2,7 @@ package com.devchat.devchat_room.dao.impl;
 
 import com.devchat.devchat_room.dao.UserDao;
 import com.devchat.devchat_room.model.User;
+import com.devchat.devchat_room.util.CommonConstants;
 import com.devchat.devchat_room.util.DBCollection;
 import com.mongodb.client.result.DeleteResult;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User checkIfUserExistWithKey(String name) {
-        return mongoTemplate.findOne(Query.query(Criteria.where("name").is(name)), User.class , DBCollection.user.name());
+    public User checkIfUserExistWithKey(String name, String roomId) {
+        return mongoTemplate.findOne(Query.query(Criteria.where("name").is(name).and(CommonConstants.ROOM_ID).is(roomId)), User.class , DBCollection.user.name());
     }
 
     @Override

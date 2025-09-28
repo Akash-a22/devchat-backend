@@ -1,5 +1,5 @@
 package com.devchat.devchat_room.util;
 
 public enum DBCollection {
-    room, user, increment
+    room, user, session, increment
 }

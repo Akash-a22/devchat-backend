@@ -29,8 +29,8 @@ public class UserController {
         return userService.getAllUser();
     }
 
-    @DeleteMapping
-    private ResponseDTO deleteUser(@RequestParam String userId){
+    @DeleteMapping("/{userId}")
+    private ResponseDTO deleteUser(@PathVariable String userId){
         return userService.deleteUserById(userId);
     }
 }

@@ -8,3 +8,6 @@ spring:
 
 server:
   port: 8000
+
+user:
+  secretKey: session-conf-1100

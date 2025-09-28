@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
@@ -90,5 +91,9 @@ public class CommonUtil {
         Increment increment = mongoTemplate.findOne(query, Increment.class, DBCollection.increment.name());
         CompletableFuture .runAsync( () -> mongoTemplate.updateFirst(query, new Update().set("value" , increment.getValue() + 1) , DBCollection.increment.name()));
         return increment.getValue();
+    }
+
+    public LocalDateTime getModifiedOn(LocalDateTime modifiedOn) {
+        return modifiedOn.plusMinutes(1);
     }
 }

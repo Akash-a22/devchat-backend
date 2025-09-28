@@ -9,7 +9,7 @@ public interface RoomDao {
 
     Room createRoom(Room room);
 
-    Room getRoomByKey(String key);
+    Room getRoomByKey(String key, String value);
 
     DeleteResult deleteRoom(String key);
 

@@ -18,6 +18,11 @@ public class RoomController {
         return roomService.createRoom(room);
     }
 
+    @GetMapping("/{roomId}")
+    public ResponseDTO getRoom(@PathVariable String roomId){
+        return roomService.getRoom(roomId);
+    }
+
     @PostMapping("/update")
     public ResponseDTO updateRoom(@RequestBody Room room) {
         return roomService.updateRoom(room);
@@ -28,8 +33,8 @@ public class RoomController {
         return roomService.joinRoom(room);
     }
 
-    @DeleteMapping("/{key}")
-    public ResponseDTO deleteRoom(@PathVariable String key) {
-        return roomService.deleteRoom(key);
+    @DeleteMapping("/{roomId}")
+    public ResponseDTO deleteRoom(@PathVariable String roomId) {
+        return roomService.deleteRoom(roomId);
     }
 }

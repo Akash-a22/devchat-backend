@@ -2,6 +2,7 @@ package com.devchat.devchat_room.dao.impl;
 
 import com.devchat.devchat_room.dao.RoomDao;
 import com.devchat.devchat_room.model.Room;
+import com.devchat.devchat_room.util.CommonConstants;
 import com.devchat.devchat_room.util.CommonUtil;
 import com.devchat.devchat_room.util.DBCollection;
 import com.mongodb.client.result.DeleteResult;
@@ -27,18 +28,18 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Room getRoomByKey(String key) {
-        return mongoTemplate.findOne(new Query(Criteria.where("key").is(key)),Room.class, DBCollection.room.name());
+    public Room getRoomByKey(String key, String value) {
+        return mongoTemplate.findOne(new Query(Criteria.where(key).is(value)),Room.class, DBCollection.room.name());
     }
 
     @Override
     public DeleteResult deleteRoom(String key) {
-        return mongoTemplate.remove(Query.query(Criteria.where("key").is(key)),Room.class,DBCollection.room.name());
+        return mongoTemplate.remove(Query.query(Criteria.where(CommonConstants.KEY).is(key)),Room.class,DBCollection.room.name());
     }
 
     @Override
     public UpdateResult updateRoom(Room roomDB) {
-        Query query=Query.query(Criteria.where("roomId").is(roomDB.getRoomId()));
+        Query query=Query.query(Criteria.where(CommonConstants.ROOM_ID).is(roomDB.getRoomId()));
         UpdateDefinition update = commonUtil.buildUpdateFromNonNullFields(roomDB);
         return mongoTemplate.updateFirst(query,update,Room.class,DBCollection.room.name());
     }

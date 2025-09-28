@@ -4,14 +4,18 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
+import java.time.LocalDateTime;
+
 @Data
-@Document(collection = "user")
-public class User extends  BaseEntity {
+@Document(collection = "session")
+public class Session {
+
     @Id
     private String id;
-    private String name;
-    private String key;
-    private String userId;
-    private String token;
     private String roomId;
+    private LocalDateTime createOn;
+    private LocalDateTime modifiedOn;
+    private LocalDateTime expireOn;
+    private SessionStatus status;
 }

@@ -10,7 +10,7 @@ public interface UserDao {
 
     void saveUser(User user);
 
-    User checkIfUserExistWithKey(String name);
+    User checkIfUserExistWithKey(String name, String roomId);
 
     User getUserById(String id);
 
