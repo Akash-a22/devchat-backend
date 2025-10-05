@@ -18,9 +18,9 @@ public class RoomController {
         return roomService.createRoom(room);
     }
 
-    @GetMapping("/{roomId}")
-    public ResponseDTO getRoom(@PathVariable String roomId){
-        return roomService.getRoom(roomId);
+    @GetMapping("/{roomId}/{userId}")
+    public ResponseDTO getRoom(@PathVariable String roomId , @PathVariable String userId) {
+        return roomService.getRoom(roomId , userId);
     }
 
     @PostMapping("/update")

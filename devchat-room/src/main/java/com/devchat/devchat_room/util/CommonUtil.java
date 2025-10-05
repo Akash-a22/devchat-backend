@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -23,10 +24,11 @@ import java.util.concurrent.*;
 @Slf4j
 public class CommonUtil {
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private Environment environment;
 
 
     public ResponseDTO prepareResponse(ResponseDTO responseDTO, Object data, String status, int statusCode, String message) {
@@ -53,47 +55,34 @@ public class CommonUtil {
         }
         return update;
     }
-    public ExecutorService getExecutorService(){
-        ExecutorService executorService= Executors.newFixedThreadPool(5);
-        return executorService;
-    }
 
-    public void shutDownExecutorService(List<Future<?>> futures, ExecutorService executorService) {
-        for (Future<?> future : futures) {
-            try {
-                future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                log.error("Exception while waiting for completion of thread {} \n {}", e.getMessage() , Arrays.toString(e.getStackTrace()));
-            }
-        }
-        executorService.shutdown();
-    }
     public String generateKey() {
         SecureRandom random = new SecureRandom();
+        String secretKey = environment.getProperty("user.secretKey");
         StringBuilder sb = new StringBuilder(6);
         for (int i = 0; i < 6; i++) {
-            int index = random.nextInt(CHARACTERS.length());
-            sb.append(CHARACTERS.charAt(index));
+            int index = random.nextInt(secretKey.length());
+            sb.append(secretKey.charAt(index));
         }
         return sb.toString();
     }
 
     public String getId(String type){
-        if(StringUtils.equalsIgnoreCase(type , "USER")){
-            return "USER" + getNumber(type);
-        } else if (StringUtils.equalsIgnoreCase(type , "ROOM")) {
-            return "ROOM" + getNumber(type);
+        if(StringUtils.equalsIgnoreCase(type , CommonConstants.USER)){
+            return CommonConstants.USER + getNumber(type);
+        } else if (StringUtils.equalsIgnoreCase(type , CommonConstants.ROOM)) {
+            return CommonConstants.ROOM + getNumber(type);
         }
         return Strings.EMPTY;
     }
     private long getNumber(String type){
-        Query query = Query.query(Criteria.where("type").is(type));
+        Query query = Query.query(Criteria.where(CommonConstants.TYPE).is(type));
         Increment increment = mongoTemplate.findOne(query, Increment.class, DBCollection.increment.name());
         CompletableFuture .runAsync( () -> mongoTemplate.updateFirst(query, new Update().set("value" , increment.getValue() + 1) , DBCollection.increment.name()));
         return increment.getValue();
     }
 
     public LocalDateTime getModifiedOn(LocalDateTime modifiedOn) {
-        return modifiedOn.plusMinutes(1);
+        return modifiedOn.plusMinutes(Long.parseLong(environment.getProperty(CommonConstants.USER_TOKEN_EXPIRY_TIME)));
     }
 }

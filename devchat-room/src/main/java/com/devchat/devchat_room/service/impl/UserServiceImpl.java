@@ -43,14 +43,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDTO createUser(User user) {
-        if (ObjectUtils.isNotEmpty(userDao.checkIfUserExistWithKey(user.getName() , user.getRoomId()))) {
+        if (ObjectUtils.isNotEmpty(userDao.checkIfUserExistWithKey(user.getName(), user.getRoomId()))) {
             return commonUtil.prepareResponse(new ResponseDTO(), null, "NOT_CREATED", HttpStatus.BAD_REQUEST.value(), "User with the name is already exist in room");
         }
         user.setKey(commonUtil.generateKey());
         user.setUserId(commonUtil.getId("USER"));
-        user.setToken(jwtUtil.generateToken(user.getUserId()));
+        user.setToken(jwtUtil.generateToken(user.getName(), user.getUserId()));
         user.createEntity(user.getName());
-        prepareUserEntity(user);
+        user.setKey(commonUtil.generateKey());
         userDao.saveUser(user);
         log.info("User with name {} is created successfully", user.getName());
         return commonUtil.prepareResponse(new ResponseDTO(), user, "CREATED", HttpStatus.CREATED.value(), "User is created successfully");
@@ -60,17 +60,17 @@ public class UserServiceImpl implements UserService {
     public ResponseDTO deleteUserById(String id) {
         ResponseDTO response = getUserById(id);
         User user = (User) response.getResponseObject();
-        if(ObjectUtils.isNotEmpty(user)){
+        if (ObjectUtils.isNotEmpty(user)) {
             removeUserFromRoom(user);
         }
         userDao.deleteUserById(id);
-        return commonUtil.prepareResponse(new ResponseDTO(), null , "SUCCESS" , HttpStatus.OK.value() , "User is removed from room successfully");
+        return commonUtil.prepareResponse(new ResponseDTO(), null, "SUCCESS", HttpStatus.OK.value(), "User is removed from room successfully");
     }
 
     private void removeUserFromRoom(User user) {
         Room room = roomDao.getRoomByKey(CommonConstants.ROOM_ID, user.getRoomId());
-        if(ObjectUtils.isNotEmpty(room)){
-            room.getUsers().removeIf(ur  -> StringUtils.equalsIgnoreCase(ur.getUserId(),user.getUserId()));
+        if (ObjectUtils.isNotEmpty(room)) {
+            room.getUsers().removeIf(ur -> StringUtils.equalsIgnoreCase(ur.getUserId(), user.getUserId()));
             updateRoomSession(user.getRoomId());
             roomDao.updateRoom(room);
         }
@@ -101,8 +101,4 @@ public class UserServiceImpl implements UserService {
         return commonUtil.prepareResponse(new ResponseDTO(), users, "FOUND", HttpStatus.OK.value(), "Users is found successfully");
     }
 
-    private void prepareUserEntity(User user) {
-        user.setUserId(commonUtil.getId("USER"));
-        user.setKey(commonUtil.generateKey());
-    }
 }

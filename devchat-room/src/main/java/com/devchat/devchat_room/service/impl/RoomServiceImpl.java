@@ -130,7 +130,6 @@ public class RoomServiceImpl implements RoomService {
         }
         user.setRoomId(roomDB.getRoomId());
         roomDB.updateEntity(user.getName());
-        roomDB.setSize(roomDB.getSize() + 1);
         userService.createUser(user);
         roomDB.getUsers().add(user);
         updateRoomSession(roomDB.getRoomId());
@@ -141,7 +140,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public ResponseDTO getRoom(String roomId) {
+    public ResponseDTO getRoom(String roomId, String userId) {
         Room room = roomDao.getRoomByKey(CommonConstants.ROOM_ID, roomId);
         if(ObjectUtils.isEmpty(room)){
             return commonUtil.prepareResponse(new ResponseDTO(), null, "BAD_REQUEST", HttpStatus.BAD_REQUEST.value(), "Room is not exist");
@@ -150,7 +149,17 @@ public class RoomServiceImpl implements RoomService {
         if (!CollectionUtils.isEmpty(response)) {
             return commonUtil.prepareResponse(new ResponseDTO(), response, "BAD_REQUEST", HttpStatus.BAD_REQUEST.value(), "Please provide necessary fields");
         }
+        prepareRoomResponse(room , userId);
         return  commonUtil.prepareResponse(new ResponseDTO(), room, "SUCCESS", HttpStatus.OK.value(), "");
+    }
+
+    private void prepareRoomResponse(Room room, String userId) {
+        room.getUsers().forEach(user -> {
+                    if (!StringUtils.equalsIgnoreCase(userId, user.getUserId())) {
+                        user.setToken(StringUtils.EMPTY);
+                    }
+                }
+        );
     }
 
     private void updateRoomSession(String roomId) {
@@ -179,8 +188,9 @@ public class RoomServiceImpl implements RoomService {
             response.add("room is not found with current key or its already closed");
             return response;
         }
-        if (dbRoom.getUsers().size() >= 5) {
+        if (dbRoom.getUsers().size() > dbRoom.getSize()) {
             response.add("room is full");
+            return response;
         }
         // is room Session ACTIVE
         Session session = sessionDao.getSession(room.getRoomId());

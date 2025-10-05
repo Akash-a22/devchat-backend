@@ -3,11 +3,14 @@ spring:
     name: room
   data:
     mongodb:
-      uri: mongodb://localhost:27017
-      database: devchat
+      uri: ${mongo-connection-uri}
+      database: ${db-name}
 
 server:
   port: 8000
 
 user:
-  secretKey: session-conf-1100
+  secretKey: ${secret-key}
+  token:
+    expiry:
+      time: ${jwt-token-expiry}
